@@ -10,6 +10,15 @@ const HistoryPages = () => {
   const [limit, setLimit] = useState(5);
   const [loading, setLoading] = useState(false);
 
+  const [filters, setFilters] = useState({
+    nim: "",
+    nama_mahasiswa: "",
+    id_buku: "",
+    judul_buku: "",
+    tanggal_peminjaman: "",
+    tanggal_kembali: "",
+  });
+
   const tableColumns = [
     { key: "nama_mahasiswa", header: "Nama Mahasiswa" },
     { key: "nim", header: "NIM" },
@@ -64,11 +73,19 @@ const HistoryPages = () => {
   const fetchHistory = async () => {
     try {
       setLoading(true);
+
+      const queryParams = new URLSearchParams({
+        page: currentPage,
+        limit: limit,
+        ...Object.fromEntries(
+          Object.entries(filters).filter(([_, value]) => value !== "")
+        ),
+      });
+
       const response = await axios.get(
-        `${
-          import.meta.env.VITE_API_URL
-        }/history?page=${currentPage}&limit=${limit}`
+        `${import.meta.env.VITE_API_URL}/history?${queryParams}`
       );
+
       if (response.data.status === 0) {
         setHistory(response.data.data);
         setTotalPages(response.data.metadata.totalPage);
@@ -82,7 +99,7 @@ const HistoryPages = () => {
 
   useEffect(() => {
     fetchHistory();
-  }, [currentPage, limit]);
+  }, [currentPage, limit, filters]);
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
@@ -94,10 +111,122 @@ const HistoryPages = () => {
     setCurrentPage(1);
   };
 
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [name]: value,
+    }));
+    setCurrentPage(1);
+  };
+
   return (
     <div className="layout">
       <div className="mb-8"></div>
       <div className="text-3xl px-4 mb-2">History Buku</div>
+
+      <div className="px-4 mb-4 grid grid-cols-3 gap-4">
+        <div>
+          <label
+            htmlFor="nim"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
+            NIM (Student ID)
+          </label>
+          <input
+            id="nim"
+            type="text"
+            name="nim"
+            placeholder="Enter NIM"
+            value={filters.nim}
+            onChange={handleFilterChange}
+            className="border rounded px-2 py-1 w-full"
+          />
+        </div>
+        <div>
+          <label
+            htmlFor="nama_mahasiswa"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
+            Nama Mahasiswa (Student Name)
+          </label>
+          <input
+            id="nama_mahasiswa"
+            type="text"
+            name="nama_mahasiswa"
+            placeholder="Enter Student Name"
+            value={filters.nama_mahasiswa}
+            onChange={handleFilterChange}
+            className="border rounded px-2 py-1 w-full"
+          />
+        </div>
+        <div>
+          <label
+            htmlFor="id_buku"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
+            ID Buku (Book ID)
+          </label>
+          <input
+            id="id_buku"
+            type="text"
+            name="id_buku"
+            placeholder="Enter Book ID"
+            value={filters.id_buku}
+            onChange={handleFilterChange}
+            className="border rounded px-2 py-1 w-full"
+          />
+        </div>
+        <div>
+          <label
+            htmlFor="judul_buku"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
+            Judul Buku (Book Title)
+          </label>
+          <input
+            id="judul_buku"
+            type="text"
+            name="judul_buku"
+            placeholder="Enter Book Title"
+            value={filters.judul_buku}
+            onChange={handleFilterChange}
+            className="border rounded px-2 py-1 w-full"
+          />
+        </div>
+        <div>
+          <label
+            htmlFor="tanggal_peminjaman"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
+            Tanggal Peminjaman (Start Date)
+          </label>
+          <input
+            id="tanggal_peminjaman"
+            type="date"
+            name="tanggal_peminjaman"
+            value={filters.tanggal_peminjaman}
+            onChange={handleFilterChange}
+            className="border rounded px-2 py-1 w-full"
+          />
+        </div>
+        <div>
+          <label
+            htmlFor="tanggal_kembali"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
+            Tanggal Kembali (End Date)
+          </label>
+          <input
+            id="tanggal_kembali"
+            type="date"
+            name="tanggal_kembali"
+            value={filters.tanggal_kembali}
+            onChange={handleFilterChange}
+            className="border rounded px-2 py-1 w-full"
+          />
+        </div>
+      </div>
 
       <div className="flex justify-between items-center px-4 mb-4">
         <div className="flex items-center space-x-2">
