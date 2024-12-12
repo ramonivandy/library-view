@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 const DynamicTable = ({
   columns,
@@ -8,7 +8,6 @@ const DynamicTable = ({
   keyField = "id",
   loading = false,
 }) => {
-  // Number of skeleton rows to show while loading
   const skeletonRowCount = 3;
 
   const LoadingSkeleton = () =>
@@ -36,6 +35,13 @@ const DynamicTable = ({
         </tr>
       ));
 
+  const renderCell = (item, column) => {
+    if (column.render) {
+      return column.render(item[column.key]);
+    }
+    return item[column.key];
+  };
+
   return (
     <div className="mt-8 overflow-x-auto">
       <table className="min-w-full bg-white">
@@ -60,21 +66,26 @@ const DynamicTable = ({
                     key={`${item[keyField]}-${column.key}`}
                     className="border px-4 py-2"
                   >
-                    {item[column.key]}
+                    {renderCell(item, column)}
                   </td>
                 ))}
                 {actions && (
                   <td className="border px-4 py-2">
                     <div className="flex gap-2">
-                      {actions.map((action) => (
-                        <button
-                          key={action.label}
-                          onClick={() => onAction(action.type, item[keyField])}
-                          className={`px-3 py-1 ${action.className}`}
-                        >
-                          {action.label}
-                        </button>
-                      ))}
+                      {actions.map(
+                        (action) =>
+                          (!action.condition || action.condition(item)) && (
+                            <button
+                              key={action.label}
+                              onClick={() =>
+                                onAction(action.type, item[keyField])
+                              }
+                              className={`px-3 py-1 ${action.className}`}
+                            >
+                              {action.label}
+                            </button>
+                          )
+                      )}
                     </div>
                   </td>
                 )}
