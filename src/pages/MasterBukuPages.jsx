@@ -8,7 +8,7 @@ const MasterBukuPages = () => {
   const [books, setBooks] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
-  const [limit] = useState(2);
+  const [limit, setLimit] = useState(5);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     judul_buku: "",
@@ -85,7 +85,7 @@ const MasterBukuPages = () => {
 
   useEffect(() => {
     fetchBooks();
-  }, [currentPage]);
+  }, [currentPage, limit]);
 
   // Handle form input changes
   const handleInputChange = (e) => {
@@ -111,7 +111,7 @@ const MasterBukuPages = () => {
         }
       } else {
         const response = await axios.post(
-          "${import.meta.env.VITE_API_URL}/master/buku",
+          `${import.meta.env.VITE_API_URL}/master/buku`,
           formData
         );
         if (response.data.status === 0) {
@@ -182,6 +182,17 @@ const MasterBukuPages = () => {
     }
   };
 
+  // New methods for pagination
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
+
+  const handleLimitChange = (e) => {
+    const newLimit = parseInt(e.target.value);
+    setLimit(newLimit);
+    setCurrentPage(1); // Reset to first page when changing limit
+  };
+
   return (
     <div className="layout">
       <div className="mb-8"></div>
@@ -195,6 +206,25 @@ const MasterBukuPages = () => {
         isEditing={isEditing}
       />
 
+      {/* Pagination and Limit Controls */}
+      <div className="flex justify-between items-center px-4 mb-4">
+        <div className="flex items-center space-x-2 mt-4">
+          <span>Show</span>
+          <select
+            value={limit}
+            onChange={handleLimitChange}
+            className="border rounded px-2 py-1"
+          >
+            {[5, 10, 20, 50, 100].map((limitOption) => (
+              <option key={limitOption} value={limitOption}>
+                {limitOption}
+              </option>
+            ))}
+          </select>
+          <span>entries</span>
+        </div>
+      </div>
+
       <DynamicTable
         columns={tableColumns}
         data={books}
@@ -205,19 +235,21 @@ const MasterBukuPages = () => {
       />
 
       {/* Pagination */}
-      <div className="mt-4 flex justify-center">
+      <div className="mt-4 flex justify-center items-center">
         <button
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
           className="mx-1 px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
         >
           Previous
         </button>
+
         <span className="mx-4 py-2">
           Page {currentPage} of {totalPages}
         </span>
+
         <button
-          onClick={() => setCurrentPage((prev) => prev + 1)}
+          onClick={() => handlePageChange(currentPage + 1)}
           disabled={currentPage >= totalPages}
           className="mx-1 px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
         >

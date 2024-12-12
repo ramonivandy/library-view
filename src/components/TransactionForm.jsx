@@ -15,7 +15,7 @@ const TransactionForm = ({ onSubmit, onClose }) => {
     const fetchMahasiswa = async () => {
       try {
         const response = await axios.get(
-          "${import.meta.env.VITE_API_URL}/master/mahasiswa"
+          `${import.meta.env.VITE_API_URL}/master/mahasiswa`
         );
         setMahasiswa(response.data.data);
       } catch (error) {
@@ -26,7 +26,7 @@ const TransactionForm = ({ onSubmit, onClose }) => {
     const fetchBooks = async () => {
       try {
         const response = await axios.get(
-          "${import.meta.env.VITE_API_URL}/master/buku"
+          `${import.meta.env.VITE_API_URL}/master/buku`
         );
         setBooks(response.data.data);
       } catch (error) {
