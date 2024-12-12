@@ -68,7 +68,9 @@ const MasterBukuPages = () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `http://localhost:3001/master/buku?page=${currentPage}&limit=${limit}`
+        `${
+          import.meta.env.VITE_API_URL
+        }/master/buku?page=${currentPage}&limit=${limit}`
       );
       if (response.data.status === 0) {
         setBooks(response.data.data);
@@ -101,7 +103,7 @@ const MasterBukuPages = () => {
     try {
       if (isEditing) {
         const response = await axios.put(
-          `http://localhost:3001/master/buku/${editId}`,
+          `${import.meta.env.VITE_API_URL}/master/buku/${editId}`,
           formData
         );
         if (response.data.status === 0) {
@@ -109,7 +111,7 @@ const MasterBukuPages = () => {
         }
       } else {
         const response = await axios.post(
-          "http://localhost:3001/master/buku",
+          "${import.meta.env.VITE_API_URL}/master/buku",
           formData
         );
         if (response.data.status === 0) {
@@ -139,7 +141,7 @@ const MasterBukuPages = () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `http://localhost:3001/master/buku/${id}`
+        `${import.meta.env.VITE_API_URL}/master/buku/${id}`
       );
       if (response.data.status === 0) {
         setFormData({
@@ -167,7 +169,7 @@ const MasterBukuPages = () => {
     if (window.confirm("Are you sure you want to delete this book?")) {
       try {
         const response = await axios.delete(
-          `http://localhost:3001/master/buku/${id}`
+          `${import.meta.env.VITE_API_URL}/master/buku/${id}`
         );
         if (response.data.status === 0) {
           alert(response.data.message);

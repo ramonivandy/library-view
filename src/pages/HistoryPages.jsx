@@ -65,7 +65,9 @@ const HistoryPages = () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `http://localhost:3001/history?page=${currentPage}&limit=${limit}`
+        `${
+          import.meta.env.VITE_API_URL
+        }/history?page=${currentPage}&limit=${limit}`
       );
       if (response.data.status === 0) {
         setHistory(response.data.data);

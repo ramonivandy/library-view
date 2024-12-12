@@ -37,6 +37,11 @@ Before you begin, ensure you have met the following requirements:
    yarn install
    ```
 
+2.5 **Setup ENV**
+- Create .env file
+- Copy the env.example value
+- Set API_URL as your setting (default will be http://localhost:3001/api) 
+
 3. **Start the development server**
    ```bash
    # Using npm

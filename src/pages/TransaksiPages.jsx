@@ -72,7 +72,9 @@ const TransaksiPages = () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `http://localhost:3001/transaksi?page=${currentPage}&limit=${limit}`
+        `${
+          import.meta.env.VITE_API_URL
+        }/transaksi?page=${currentPage}&limit=${limit}`
       );
       if (response.data.status === 0) {
         setTransactions(response.data.data);
@@ -102,7 +104,7 @@ const TransaksiPages = () => {
       }
 
       const response = await axios.put(
-        `http://localhost:3001/transaksi/${id}/return`,
+        `${import.meta.env.VITE_API_URL}/transaksi/${id}/return`,
         { book_ids: unreturnedBooks }
       );
 
@@ -126,7 +128,7 @@ const TransaksiPages = () => {
     try {
       console.log(formData);
       const response = await axios.post(
-        "http://localhost:3001/transaksi",
+        "${import.meta.env.VITE_API_URL}/transaksi",
         formData
       );
       if (response.data.status === 0) {

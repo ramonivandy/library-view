@@ -56,7 +56,9 @@ const MasterMahasiswaPages = () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `http://localhost:3001/master/mahasiswa?page=${currentPage}&limit=${limit}`
+        `${
+          import.meta.env.VITE_API_URL
+        }/master/mahasiswa?page=${currentPage}&limit=${limit}`
       );
       if (response.data.status === 0) {
         setMahasiswa(response.data.data);
@@ -87,7 +89,7 @@ const MasterMahasiswaPages = () => {
     try {
       if (isEditing) {
         const response = await axios.put(
-          `http://localhost:3001/master/mahasiswa/${editId}`,
+          `${import.meta.env.VITE_API_URL}/master/mahasiswa/${editId}`,
           formData
         );
         if (response.data.status === 0) {
@@ -95,7 +97,7 @@ const MasterMahasiswaPages = () => {
         }
       } else {
         const response = await axios.post(
-          "http://localhost:3001/master/mahasiswa",
+          "${import.meta.env.VITE_API_URL}/master/mahasiswa",
           formData
         );
         if (response.data.status === 0) {
@@ -120,7 +122,7 @@ const MasterMahasiswaPages = () => {
   const handleEdit = async (id) => {
     try {
       const response = await axios.get(
-        `http://localhost:3001/master/mahasiswa/${id}`
+        `${import.meta.env.VITE_API_URL}/master/mahasiswa/${id}`
       );
       if (response.data.status === 0) {
         setFormData({
@@ -142,7 +144,7 @@ const MasterMahasiswaPages = () => {
     if (window.confirm("Are you sure you want to delete this mahasiswa?")) {
       try {
         const response = await axios.delete(
-          `http://localhost:3001/master/mahasiswa/${id}`
+          `${import.meta.env.VITE_API_URL}/master/mahasiswa/${id}`
         );
         if (response.data.status === 0) {
           alert(response.data.message);
