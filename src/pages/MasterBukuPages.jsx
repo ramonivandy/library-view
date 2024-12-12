@@ -9,6 +9,7 @@ const MasterBukuPages = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [limit] = useState(2);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     judul_buku: "",
     pengarang: "",
@@ -65,6 +66,7 @@ const MasterBukuPages = () => {
   // Fetch books
   const fetchBooks = async () => {
     try {
+      setLoading(true);
       const response = await axios.get(
         `http://localhost:3001/master/buku?page=${currentPage}&limit=${limit}`
       );
@@ -74,6 +76,8 @@ const MasterBukuPages = () => {
       }
     } catch (error) {
       console.error("Error fetching books:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -133,6 +137,7 @@ const MasterBukuPages = () => {
   // Edit book
   const handleEdit = async (id) => {
     try {
+      setLoading(true);
       const response = await axios.get(
         `http://localhost:3001/master/buku/${id}`
       );
@@ -152,6 +157,8 @@ const MasterBukuPages = () => {
     } catch (error) {
       console.error("Error fetching book details:", error);
       alert("Error fetching book details");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -192,6 +199,7 @@ const MasterBukuPages = () => {
         actions={tableActions}
         onAction={handleTableAction}
         keyField="id_buku"
+        loading={loading}
       />
 
       {/* Pagination */}

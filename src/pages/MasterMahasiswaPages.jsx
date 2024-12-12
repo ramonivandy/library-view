@@ -16,6 +16,7 @@ const MasterMahasiswaPages = () => {
   });
   const [isEditing, setIsEditing] = useState(false);
   const [editId, setEditId] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const formFields = [
     { name: "nama_mahasiswa", placeholder: "Nama Mahasiswa", type: "text" },
@@ -53,6 +54,7 @@ const MasterMahasiswaPages = () => {
   // Fetch mahasiswa
   const fetchMahasiswa = async () => {
     try {
+      setLoading(true);
       const response = await axios.get(
         `http://localhost:3001/master/mahasiswa?page=${currentPage}&limit=${limit}`
       );
@@ -62,6 +64,8 @@ const MasterMahasiswaPages = () => {
       }
     } catch (error) {
       console.error("Error fetching mahasiswa:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -170,6 +174,7 @@ const MasterMahasiswaPages = () => {
         actions={tableActions}
         onAction={handleTableAction}
         keyField="id_mahasiswa"
+        loading={loading}
       />
 
       {/* Pagination */}
